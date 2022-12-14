@@ -1,28 +1,39 @@
+// import PropTypes from "prop-types";
 import { Component } from "react";
 
 export class Searchbar extends Component {
+
     state = {
-        searchQuerry: '',
+        searchInput: '',
     }
 
     handleSeachChange = ev => {
-        this.setState({ searchQuerry: ev.currentTarget.value.toLowerCase() });
+        this.setState({ searchInput: ev.currentTarget.value.toLowerCase() });
     }
 
 
     handleSubmit = ev => {
+        const { searchInput } = this.state;
+        const { onSubmit } = this.props;
+
         ev.preventDefault();
 
-        if (this.state.searchQuerry.trim() === '') {
+        if (searchInput.trim() === '') {
         return alert('Введите значение поиска');
         }
 
-        this.props.onSubmit(this.state.searchQuerry);
+        if (onSubmit === searchInput.trim()) {
+            
+        }
 
-        this.setState({ searchQuerry: '' })
+        onSubmit(searchInput);
+
+        this.setState({ searchInput: '' })
     }
 
     render() {
+        const { searchInput } = this.state;
+
         return (
             <>
             <header className="searchbar">
@@ -37,7 +48,7 @@ export class Searchbar extends Component {
                         autocomplete="off"
                         autofocus
                         placeholder="Search images and photos"
-                        value={this.state.searchQuerry}
+                        value={searchInput}
                         onChange={this.handleSeachChange}
                     />
                 </form>
@@ -46,3 +57,4 @@ export class Searchbar extends Component {
         )
     }
 }
+
