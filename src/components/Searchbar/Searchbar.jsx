@@ -1,6 +1,8 @@
 // import PropTypes from "prop-types";
 import { Component } from "react";
 
+import { SearchbarWrapp, SearchForm, SearchBtn, SearchBtnLabel, SearchFormInput,  } from "./Searchbar.styled";
+
 export class Searchbar extends Component {
 
     state = {
@@ -33,17 +35,17 @@ export class Searchbar extends Component {
 
     render() {
         const { searchInput } = this.state;
+        const { Loading } = this.props;
 
         return (
             <>
-            <header className="searchbar">
-                <form onSubmit={this.handleSubmit} className="form">
-                    <button type="submit" className="button">
-                        <span className="button-label">Search</span>
-                    </button>
+            <SearchbarWrapp>
+                <SearchForm onSubmit={this.handleSubmit}>
+                    <SearchBtn type="submit">
+                        <SearchBtnLabel >Search</SearchBtnLabel>
+                    </SearchBtn>
 
-                    <input
-                        className="input"
+                    <SearchFormInput
                         type="text"
                         autocomplete="off"
                         autofocus
@@ -51,8 +53,8 @@ export class Searchbar extends Component {
                         value={searchInput}
                         onChange={this.handleSeachChange}
                     />
-                </form>
-            </header>
+                </SearchForm>
+            </SearchbarWrapp>
             </>
         )
     }
