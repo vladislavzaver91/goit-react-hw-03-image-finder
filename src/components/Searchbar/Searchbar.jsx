@@ -1,62 +1,35 @@
-// import PropTypes from "prop-types";
-import { Component } from "react";
+import PropTypes from "prop-types";
+import {FaSearch} from 'react-icons/fa';
 
-import { SearchbarWrapp, SearchForm, SearchBtn, SearchBtnLabel, SearchFormInput,  } from "./Searchbar.styled";
+import { SearchBtn } from 'components/SearchBtn';
+import { SearchbarWrapp, SearchForm, SearchFormInput,  } from "./Searchbar.styled";
 
-export class Searchbar extends Component {
-
-    state = {
-        searchInput: '',
-    }
-
-    handleSeachChange = ev => {
-        this.setState({ searchInput: ev.currentTarget.value.toLowerCase() });
-    }
-
-
-    handleSubmit = ev => {
-        const { searchInput } = this.state;
-        const { onSubmit } = this.props;
-
+export const Searchbar = ({ onSubmit, Loading }) => {
+    const handleSearchChanhe = ev => {
         ev.preventDefault();
+        onSubmit(ev.target.querry.value);
+        ev.target.reset();
+    };
 
-        if (searchInput.trim() === '') {
-        return alert('Введите значение поиска');
-        }
-
-        if (onSubmit === searchInput.trim()) {
-            
-        }
-
-        onSubmit(searchInput);
-
-        this.setState({ searchInput: '' })
-    }
-
-    render() {
-        const { searchInput } = this.state;
-        const { Loading } = this.props;
-
-        return (
-            <>
+    return (
+        <>
             <SearchbarWrapp>
-                <SearchForm onSubmit={this.handleSubmit}>
-                    <SearchBtn type="submit">
-                        <SearchBtnLabel >Search</SearchBtnLabel>
-                    </SearchBtn>
-
+                <SearchForm onSubmit={handleSearchChanhe}>
+                    <SearchBtn type="submit" Loading={Loading} icon={<FaSearch size={20} />}></SearchBtn>
                     <SearchFormInput
+                        name="querry"
                         type="text"
                         autocomplete="off"
-                        autofocus
                         placeholder="Search images and photos"
-                        value={searchInput}
-                        onChange={this.handleSeachChange}
                     />
                 </SearchForm>
             </SearchbarWrapp>
             </>
-        )
-    }
+    )
 }
+
+Searchbar.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    Loading: PropTypes.bool.isRequired,
+};
 

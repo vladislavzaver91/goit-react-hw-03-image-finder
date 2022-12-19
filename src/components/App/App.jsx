@@ -1,6 +1,6 @@
 import { Component } from "react";
-
-import {FaSearch} from 'react-icons/fa';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Modal } from "components/Modal";
 import { Searchbar } from "components/Searchbar/Searchbar";
@@ -15,7 +15,7 @@ import { Container } from "./App.styled";
 export class App extends Component {
 
   state = {
-    searchQuerry: null,
+    searchQuerry: '',
     page: 1,
     images: [],
     error: null,
@@ -36,31 +36,28 @@ componentDidUpdate(prevProps, prevState) {
   const { searchQuerry, page } = this.state;
 
   if (prevState.searchQuerry !== searchQuerry || prevState.page !== page) {
-      console.log('изменился запрос ввода');
 
       fetchImage(searchQuerry, page)
       .then(data => {
-          if (data.hits.length < 12) {
-              console.log('кнопка "Еще" скрыта');
-          }
           if (data.total === 0) {
             this.setState({ Loading: false });
-              return alert('За Вашим запросом ничего не найдено.');
+              return toast.info('Sorry, no results were found for your query');
           }
 
           this.setState(prevState => ({
               images: [...prevState.images, ...data.hits],
+              totalHits: Math.ceil(data.totalHits / 12),
               Loading: false,
           }));
       }).catch(error => {
           console.log(error);
           this.setState({ error });
       })
-  }
+  };
 }
 
 handleFormSubmit = searchQuerry => {
-  this.setState({ searchQuerry, page: 1, image: [], Loading: true, totalHits: 0, });
+  this.setState({ searchQuerry, page: 1, images: [], Loading: true, totalHits: 0, });
 }
 
 selectImage = urlImage => {
@@ -90,16 +87,27 @@ loadMore = () => {
         {urlImage !== null && (
           <Modal image={urlImage} onClick={this.closeModal} />
         )}
-        <Searchbar onSubmit={this.handleFormSubmit} Loading={Loading}/>
+        <Searchbar onSubmit={this.handleFormSubmit} Loading={Loading} />
         {images.length > 0 && (
           <ImageGallery images={images} onSelect={this.selectImage}/>
         )}
-        {images.length > 0 && (
+        {totalHits > page && !Loading && (
           <Button onClick={this.loadMore}/>
         )}
         {Loading && (
           <Loader visible={Loading}/>
         )}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </Container>
     )
   }

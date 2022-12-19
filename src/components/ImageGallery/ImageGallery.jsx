@@ -1,5 +1,6 @@
-import { ImgGallery } from "./ImageGallery.styled";
+import PropTypes from 'prop-types';
 
+import { ImgGallery } from "./ImageGallery.styled";
 import { ImageGalleryItem } from "components/ImageGalleryItem";
 
 export const ImageGallery = ({ images, onSelect }) => {
@@ -9,3 +10,7 @@ export const ImageGallery = ({ images, onSelect }) => {
         </ImgGallery>
     )
 }
+
+ImageGalleryItem.propTypes = {
+    onSelect: PropTypes.func,
+};
